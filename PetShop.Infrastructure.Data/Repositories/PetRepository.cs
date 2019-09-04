@@ -7,7 +7,7 @@ namespace PetShop.Infrastructure.Data.Repositories
 {
     public class PetRepository : IPetRepository
     {
-        List<Pet> PetList = FakeDB.InitData().ToList();
+        static List<Pet> PetList = FakeDB.InitData().ToList();
         public Pet CreatePet(Pet pet)
         {
             PetList.Add(pet);
