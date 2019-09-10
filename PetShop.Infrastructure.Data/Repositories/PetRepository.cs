@@ -16,13 +16,14 @@ namespace PetShop.Infrastructure.Data.Repositories
 
         public bool DeletePet(int id)
         {
-            int numb = PetList.RemoveAll(x => x.ID == id);
-            bool isDeleted;
-            if (numb > 0)
-                isDeleted = true;
-            else
-                isDeleted = false;
-            return isDeleted;
+            //int numb = PetList.RemoveAll(x => x.ID == id);
+            //bool isDeleted;
+            //if (numb > 0)
+            //    isDeleted = true;
+            //else
+            //    isDeleted = false;
+            //return isDeleted;
+            return PetList.Remove(ReadPetById(id));
         }
 
         public List<Pet> ReadPetByType(Core.Entity.Type type)
@@ -47,6 +48,11 @@ namespace PetShop.Infrastructure.Data.Repositories
                 }
             }
             return pet;
+        }
+
+        public Pet ReadPetById(int id)
+        {
+            return PetList.First(x => x.ID == id);
         }
     }
 }

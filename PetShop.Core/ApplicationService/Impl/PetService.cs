@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using PetShop.Core.DomainService;
 using PetShop.Core.Entity;
 using System.Linq;
+using System;
 
 namespace PetShop.Core.ApplicationService.Impl
 {
@@ -18,12 +17,22 @@ namespace PetShop.Core.ApplicationService.Impl
 
         public Pet AddPet(Pet pet)
         {
+            if (pet.Name.Equals(null))
+                throw new NullReferenceException("You can't create a pet without a name!");
+            else if (pet.ID == 0 || _petRepo.ReadPetById(pet.ID) == null)
+                throw new NullReferenceException("There's no such pet in the database!");
+            else if (pet.Price == 0)
+                throw new NullReferenceException("You have to set a price!");
             return _petRepo.CreatePet(pet);
         }
 
         public bool RemovePet(int id)
         {
-            return _petRepo.DeletePet(id);
+            if (!_petRepo.DeletePet(id))
+            {
+                throw new Exception("The pet hasn't been removed!");
+            }
+            return true;
         }
 
         public List<Pet> GetPetByType(Entity.Type type)
@@ -62,6 +71,12 @@ namespace PetShop.Core.ApplicationService.Impl
 
         public Pet UpdatePet(Pet pet)
         {
+            if (pet.Name.Equals(null))
+                throw new NullReferenceException("The name is missing!");
+            else if (pet.ID == 0)
+                throw new NullReferenceException("The pet must have an id which is bigger than 0!");
+            else if (pet.Price == 0)
+                throw new NullReferenceException("The price is missing!");
             return _petRepo.UpdatePet(pet);
         }
     }

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PetShop.Core.ApplicationService;
+using PetShop.Core.Entity;
 
 namespace PetShop.UI.Rest.Controllers
 {
@@ -11,50 +13,64 @@ namespace PetShop.UI.Rest.Controllers
     [ApiController]
     public class OwnerController : ControllerBase
     {
-        private readonly IPetService _petService;
+        private readonly IOwnerService _ownerService;
 
-        public PetsController(IPetService service)
+        public OwnerController(IOwnerService service)
         {
-            _petService = service;
+            _ownerService = service;
         }
 
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<Pet>> Get()
+        public ActionResult<IEnumerable<Owner>> Get()
         {
-            return _petService.GetPets();
-        }
-
-        // GET api/values/DOG
-        [HttpGet("{type}")]
-        public ActionResult<IEnumerable<Pet>> Get(Type type)
-        {
-            return _petService.GetPetByType(type);
+            return _ownerService.GetOwners();
         }
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody] Pet pet)
+        public ActionResult<ObjectResult> Post([FromBody] Owner owner)
         {
-            _petService.AddPet(pet);
+            try
+            {
+                return Ok(_ownerService.AddOwner(owner));
+            }
+            catch (NullReferenceException e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         // PUT api/values/5
         [HttpPut("{id}")]
-        public ActionResult<Pet> Put(int id, [FromBody] Pet pet)
+        public ActionResult<Owner> Put(int id, [FromBody] Owner owner)
         {
-            if (id < 1 && id != pet.ID)
+            if (id < 1 && id != owner.ID)
             {
                 return BadRequest("Parameter id and pet id must be the same!");
             }
-            return Ok(_petService.UpdatePet(pet));
+            try
+            {
+                return Ok(_ownerService.UpdateOwner(owner));
+            }
+            catch (NullReferenceException e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public ActionResult<bool> Delete(int id)
+        [HttpDelete]
+        public ActionResult<bool> Delete([FromBody] Owner owner)
         {
-            return _petService.RemovePet(id);
+            try
+            {
+                return Ok(_ownerService.RemoveOwner(owner.ID));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
     }
 }
