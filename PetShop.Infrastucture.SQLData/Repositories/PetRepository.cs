@@ -36,17 +36,17 @@ namespace PetShop.Infrastucture.SQLData.Repositories
         public Pet ReadPetById(int id)
         {
             //return _ctx.Pets.FirstOrDefault(pet => pet.ID == id);
-            return _ctx.Pets.Where(o => o.ID == id).Include(p => p.PreviousOwner).FirstOrDefault();
+            return ReadPets().Where(o => o.ID == id).FirstOrDefault();
         }
 
         public List<Pet> ReadPetByType(Type type)
         {
-            return _ctx.Pets.Where(pet => pet.Type == type).ToList();
+            return ReadPets().Where(pet => pet.Type == type).ToList();
         }
 
         public List<Pet> ReadPets()
         {
-            return _ctx.Pets.Include(p => p.PreviousOwner).ToList();
+            return _ctx.Pets.Include(p => p.PreviousOwner).Include(p => p.PetColor).ThenInclude(pc => pc.Color).ToList();
         }
 
         public Pet UpdatePet(Pet pet)
@@ -69,9 +69,6 @@ namespace PetShop.Infrastucture.SQLData.Repositories
                     break;
                 case Sorting.SoldDate:
                     sortedList = pets.OrderBy(pet => pet.SoldDate);
-                    break;
-                case Sorting.Color:
-                    sortedList = pets.OrderBy(pet => pet.Color);
                     break;
                 case Sorting.Price:
                     sortedList = pets.OrderBy(pet => pet.Price);
@@ -115,9 +112,7 @@ namespace PetShop.Infrastucture.SQLData.Repositories
 
             {
 
-                filteredList = _ctx.Pets
-
-                    .Include(c => c.PreviousOwner)
+                filteredList = ReadPets()
 
                     .Skip((filter.CurrentPage - 1) * filter.ItemsPrPage)
 
@@ -130,9 +125,7 @@ namespace PetShop.Infrastucture.SQLData.Repositories
             {
                 //Else just return the full list and get the count from the list (to save a SQL call)
 
-                filteredList = _ctx.Pets
-
-                    .Include(c => c.PreviousOwner).ToList();
+                filteredList = ReadPets();
 
                 //filteredList.Count = filteredList.List.Count();
 

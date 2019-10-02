@@ -4,7 +4,7 @@ using System.Text;
 
 namespace PetShop.Core.DomainService.Filtering
 {
-    public enum Sorting { Default, Name, BirthDate, SoldDate, Color, Price }
+    public enum Sorting { Default, Name, BirthDate, SoldDate, Price }
     public enum Ordering { Default, ASC, DESC }
     public class Filter
     {

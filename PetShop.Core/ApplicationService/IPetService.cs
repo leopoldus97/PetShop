@@ -15,7 +15,6 @@ namespace PetShop.Core.ApplicationService
         IEnumerable<Pet> GetPetsFiltered(Filter filter);
         List<Pet> TopFiveCheapest();
         Pet GetPetById(int id);
-        List<Pet> GetPetsByPage(int id);
 
     }
 }

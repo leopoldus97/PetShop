@@ -20,26 +20,10 @@ namespace PetShop.UI.Rest.Controllers
             _petService = service;
         }
 
-        // GET api/pets
-        //[HttpGet]
-        //public ActionResult<IEnumerable<Pet>> Get()
-        //{
-        //    return _petService.GetPets().ToList();
-        //}
-
         [HttpGet]
         public ActionResult<IEnumerable<Pet>> GetSorting([FromQuery] Filter filter)
         {
             return Ok(_petService.GetPetsFiltered(filter).ToList());
-        }
-
-
-        // GET api/pets/Page?p=1
-        [HttpGet]
-        [Route("Page")]
-        public ActionResult<IEnumerable<Pet>> GetByPage([FromQuery]int p)
-        {
-            return _petService.GetPetsByPage(p);
         }
 
         // GET api/pets/DOG
@@ -63,14 +47,6 @@ namespace PetShop.UI.Rest.Controllers
                 return BadRequest(e.Message);
             }
         }
-
-        // GET api/pets/Sorting?Sort=1
-        //[HttpGet]
-        //[Route("Sorting")]
-        //public ActionResult<IEnumerable<Pet>> Sort([FromQuery]Filter filter)
-        //{
-        //    return _petService.GetPetsFiltered(filter).ToList();
-        //}
 
         // GET api/values/DOG
         [HttpGet]

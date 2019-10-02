@@ -7,6 +7,8 @@ namespace PetShop.Infrastucture.SQLData
     {
         public DbSet<Owner> Owners { get; set; }
         public DbSet<Pet> Pets { get; set; }
+        public DbSet<Color> Colors { get; set; }
+        public DbSet<PetColor> PetColors { get; set; }
 
         public PetShopContext(DbContextOptions<PetShopContext> opt) : base(opt)
         {
@@ -23,29 +25,55 @@ namespace PetShop.Infrastucture.SQLData
 
 
 
+            modelBuilder.Entity<Pet>()
+
+                .HasMany(p => p.PreviousOwner)
+
+                .WithOne(o => o.Pet)
+                
+                .OnDelete(DeleteBehavior.SetNull);
+
+
+
+
             modelBuilder.Entity<Owner>()
 
-                .HasOne(c => c.Pet)
+                .HasOne(o => o.Pet)
 
-                .WithMany(ct => ct.PreviousOwner)
-
-                .OnDelete(DeleteBehavior.SetNull);
-
-
-
-            modelBuilder.Entity<Pet>()
-
-                .HasMany(u => u.PreviousOwner)
-
-                .WithOne(r => r.Pet)
+                .WithMany(p => p.PreviousOwner)
 
                 .OnDelete(DeleteBehavior.SetNull);
 
 
 
-            modelBuilder.Entity<Pet>()
 
-                .HasKey(ol => new { ol.ID });
+            modelBuilder.Entity<PetColor>()
+
+            .HasKey(pc => new { pc.PetId, pc.ColorId });
+
+
+
+            modelBuilder.Entity<PetColor>()
+
+            .HasOne(pc => pc.Pet)
+
+            .WithMany(p => p.PetColor)
+            
+            .HasForeignKey(pc => pc.PetId)
+            
+            .OnDelete(DeleteBehavior.SetNull);
+
+
+
+            modelBuilder.Entity<PetColor>()
+
+            .HasOne(pc => pc.Color)
+
+            .WithMany(c => c.PetColor)
+
+            .HasForeignKey(pc => pc.ColorId)
+
+            .OnDelete(DeleteBehavior.SetNull);
 
         }
     }

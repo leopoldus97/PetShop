@@ -71,10 +71,5 @@ namespace PetShop.Core.ApplicationService.Impl
                 throw new NullReferenceException("The price is missing!");
             return _petRepo.UpdatePet(pet);
         }
-
-        public List<Pet> GetPetsByPage(int id)
-        {
-            return GetPets().Skip((id - 1) * 10).Take(10).ToList();
-        }
     }
 }

@@ -19,7 +19,6 @@ namespace PetShop.Infrastucture.SQLData
                 Type = Core.Entity.Type.CAT,
                 BirthDate = new DateTime(2014, 03, 04),
                 SoldDate = new DateTime(2015, 10, 11),
-                Color = "Red",
                 PreviousOwner = ctx.Owners.Where(o => o.ID == 1 || o.ID == 2).ToList(),
                 Price = 1023
             }).Entity;
@@ -29,7 +28,6 @@ namespace PetShop.Infrastucture.SQLData
                 Type = Core.Entity.Type.SNAKE,
                 BirthDate = new DateTime(2017, 08, 05),
                 SoldDate = new DateTime(2019, 01, 14),
-                Color = "Green",
                 PreviousOwner = ctx.Owners.Where(o => o.ID == 3).ToList(),
                 Price = 1233
             }).Entity;
@@ -50,7 +48,6 @@ namespace PetShop.Infrastucture.SQLData
                 Type = Core.Entity.Type.CAT,
                 BirthDate = new DateTime(2012, 04, 25),
                 SoldDate = new DateTime(2019, 01, 14),
-                Color = "White",
                 PreviousOwner = ctx.Owners.Where(o => o.ID == 4).ToList(),
                 Price = 1233
             }).Entity;
@@ -61,7 +58,6 @@ namespace PetShop.Infrastucture.SQLData
                 Type = Core.Entity.Type.HAMSTER,
                 BirthDate = new DateTime(2017, 08, 05),
                 SoldDate = new DateTime(2019, 01, 14),
-                Color = "Black",
                 PreviousOwner = ctx.Owners.Where(o => o.ID == 5).ToList(),
                 Price = 1233
             }).Entity;
@@ -115,6 +111,66 @@ namespace PetShop.Infrastucture.SQLData
                 Address = "Rolfsgade 15",
                 Email = "hugo.armani@hotmail.com",
                 PhoneNumber = "4540311455",
+                Pet = p12
+            }).Entity;
+
+            Color c1 = ctx.Colors.Add(new Color()
+            {
+                ID = 1,
+                Colour = "Green"
+            }).Entity;
+
+            Color c2 = ctx.Colors.Add(new Color()
+            {
+                ID = 2,
+                Colour = "Black"
+            }).Entity;
+
+            Color c3 = ctx.Colors.Add(new Color()
+            {
+                ID = 3,
+                Colour = "Red"
+            }).Entity;
+
+            Color c4 = ctx.Colors.Add(new Color()
+            {
+                ID = 4,
+                Colour = "White"
+            }).Entity;
+
+            PetColor pc1 = ctx.PetColors.Add(new PetColor()
+            {
+                Color = c1,
+                Pet = p1
+            }).Entity;
+
+            PetColor pc2 = ctx.PetColors.Add(new PetColor()
+            {
+                Color = c2,
+                Pet = p1
+            }).Entity;
+
+            PetColor pc3 = ctx.PetColors.Add(new PetColor()
+            {
+                Color = c1,
+                Pet = p11
+            }).Entity;
+
+            PetColor pc4 = ctx.PetColors.Add(new PetColor()
+            {
+                Color = c3,
+                Pet = p2
+            }).Entity;
+
+            PetColor pc5 = ctx.PetColors.Add(new PetColor()
+            {
+                Color = c4,
+                Pet = p12
+            }).Entity;
+
+            PetColor pc6 = ctx.PetColors.Add(new PetColor()
+            {
+                Color = c3,
                 Pet = p12
             }).Entity;
 
