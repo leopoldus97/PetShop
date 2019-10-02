@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using PetShop.Core.ApplicationService;
 using PetShop.Core.ApplicationService.Impl;
 using PetShop.Core.DomainService;
-using PetShop.Infrastructure.Data.Repositories;
+using PetShop.Infrastucture.SQLData;
+using PetShop.Infrastucture.SQLData.Repositories;
+using Newtonsoft.Json;
 
 namespace PetShop.UI.Rest
 {
@@ -29,11 +25,18 @@ namespace PetShop.UI.Rest
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<PetShopContext>(opt => opt.UseSqlite("Data source=petApp.db"));
+
             services.AddScoped<IPetRepository, PetRepository>();
             services.AddScoped<IPetService, PetService>();
             services.AddScoped<IOwnerRepository, OwnerRepository>();
             services.AddScoped<IOwnerService, OwnerService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().AddJsonOptions(options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                //options.SerializerSettings.MaxDepth = 3;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,10 +44,24 @@ namespace PetShop.UI.Rest
         {
             if (env.IsDevelopment())
             {
+                using (var scope = app.ApplicationServices.CreateScope())
+                {
+                    var ctx = scope.ServiceProvider.GetService<PetShopContext>();
+                    //ctx.Database.EnsureDeleted();
+                    ctx.Database.EnsureCreated();
+                    DBInitializer.Seed(ctx);
+                }
                 app.UseDeveloperExceptionPage();
             }
             else
             {
+                using (var scope = app.ApplicationServices.CreateScope())
+                {
+                    var ctx = scope.ServiceProvider.GetService<PetShopContext>();
+                    //ctx.Database.EnsureDeleted();
+                    ctx.Database.EnsureCreated();
+                    DBInitializer.Seed(ctx);
+                }
                 app.UseHsts();
             }
 

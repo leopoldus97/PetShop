@@ -1,4 +1,5 @@
-﻿using PetShop.Core.Entity;
+﻿using PetShop.Core.DomainService.Filtering;
+using PetShop.Core.Entity;
 using System.Collections.Generic;
 using Type = PetShop.Core.Entity.Type;
 
@@ -11,8 +12,10 @@ namespace PetShop.Core.ApplicationService
         Pet AddPet(Pet pet);
         bool RemovePet(int id);
         Pet UpdatePet(Pet pet);
-        List<Pet> SortListOfPets(int selector);
+        IEnumerable<Pet> GetPetsFiltered(Filter filter);
         List<Pet> TopFiveCheapest();
+        Pet GetPetById(int id);
+        List<Pet> GetPetsByPage(int id);
 
     }
 }

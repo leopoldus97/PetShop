@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PetShop.Core.ApplicationService;
 using PetShop.Core.Entity;
@@ -27,6 +24,19 @@ namespace PetShop.UI.Rest.Controllers
             return _ownerService.GetOwners();
         }
 
+        [HttpGet("{id}")]
+        public ActionResult<Owner> Get(int id)
+        {
+            try
+            {
+                return _ownerService.GetOwnerById(id);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         // POST api/values
         [HttpPost]
         public ActionResult<ObjectResult> Post([FromBody] Owner owner)
@@ -45,7 +55,7 @@ namespace PetShop.UI.Rest.Controllers
         [HttpPut("{id}")]
         public ActionResult<Owner> Put(int id, [FromBody] Owner owner)
         {
-            if (id < 1 && id != owner.ID)
+            if (id < 1 || id != owner.ID)
             {
                 return BadRequest("Parameter id and pet id must be the same!");
             }
@@ -60,9 +70,13 @@ namespace PetShop.UI.Rest.Controllers
         }
 
         // DELETE api/values/5
-        [HttpDelete]
-        public ActionResult<bool> Delete([FromBody] Owner owner)
+        [HttpDelete("{id}")]
+        public ActionResult<bool> Delete(int id, [FromBody] Owner owner)
         {
+            if (id < 1 || id != owner.ID)
+            {
+                return BadRequest("Parameter id and owner id must be the same!");
+            }
             try
             {
                 return Ok(_ownerService.RemoveOwner(owner.ID));

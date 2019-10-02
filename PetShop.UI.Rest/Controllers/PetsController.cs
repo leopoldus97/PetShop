@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PetShop.Core.ApplicationService;
+using PetShop.Core.DomainService.Filtering;
 using PetShop.Core.Entity;
 using Type = PetShop.Core.Entity.Type;
 
@@ -21,29 +20,75 @@ namespace PetShop.UI.Rest.Controllers
             _petService = service;
         }
 
-        // GET api/values
+        // GET api/pets
+        //[HttpGet]
+        //public ActionResult<IEnumerable<Pet>> Get()
+        //{
+        //    return _petService.GetPets().ToList();
+        //}
+
         [HttpGet]
-        public ActionResult<IEnumerable<Pet>> Get()
+        public ActionResult<IEnumerable<Pet>> GetSorting([FromQuery] Filter filter)
         {
-            return _petService.GetPets();
+            return Ok(_petService.GetPetsFiltered(filter).ToList());
         }
 
-        // GET api/values/DOG
-        [HttpGet("{type}")]
-        public ActionResult<IEnumerable<Pet>> Get(Type type)
+
+        // GET api/pets/Page?p=1
+        [HttpGet]
+        [Route("Page")]
+        public ActionResult<IEnumerable<Pet>> GetByPage([FromQuery]int p)
+        {
+            return _petService.GetPetsByPage(p);
+        }
+
+        // GET api/pets/DOG
+        [HttpGet]
+        [Route("Type")]
+        public ActionResult<IEnumerable<Pet>> Type([FromQuery]Type type)
         {
             return _petService.GetPetByType(type);
         }
 
-        // POST api/values
-        [HttpPost]
-        public ActionResult<ObjectResult> Post([FromBody] Pet pet)
+        // GET api/pets/1
+        [HttpGet("{id}")]
+        public ActionResult<Pet> GetById(int id)
         {
             try
             {
-                return Ok(_petService.AddPet(pet));
+                return _petService.GetPetById(id);
             }
-            catch (NullReferenceException e)
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // GET api/pets/Sorting?Sort=1
+        //[HttpGet]
+        //[Route("Sorting")]
+        //public ActionResult<IEnumerable<Pet>> Sort([FromQuery]Filter filter)
+        //{
+        //    return _petService.GetPetsFiltered(filter).ToList();
+        //}
+
+        // GET api/values/DOG
+        [HttpGet]
+        [Route("Top")]
+        public ActionResult<IEnumerable<Pet>> Top()
+        {
+            return _petService.TopFiveCheapest();
+        }
+
+        // POST api/values
+        [HttpPost]
+        public ActionResult<Pet> Post([FromBody] Pet pet)
+        {
+            try
+            {
+                return _petService.AddPet(pet);
+            }
+            catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
@@ -53,7 +98,7 @@ namespace PetShop.UI.Rest.Controllers
         [HttpPut("{id}")]
         public ActionResult<Pet> Put(int id, [FromBody] Pet pet)
         {
-            if (id < 1 && id != pet.ID)
+            if (id < 1 || id != pet.ID)
             {
                 return BadRequest("Parameter id and pet id must be the same!");
             }
@@ -67,13 +112,13 @@ namespace PetShop.UI.Rest.Controllers
             }
         }
 
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public ActionResult<bool> Delete(int id)
+        // DELETE api/values
+        [HttpDelete]
+        public ActionResult<bool> Delete([FromBody] Pet pet)
         {
             try
             {
-                return Ok(_petService.RemovePet(id));
+                return Ok(_petService.RemovePet(pet.ID));
             }
             catch (Exception e)
             {

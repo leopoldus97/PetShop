@@ -11,5 +11,6 @@ namespace PetShop.Core.ApplicationService
         Owner AddOwner(Owner owner);
         bool RemoveOwner(int id);
         Owner UpdateOwner(Owner owner);
+        Owner GetOwnerById(int id);
     }
 }

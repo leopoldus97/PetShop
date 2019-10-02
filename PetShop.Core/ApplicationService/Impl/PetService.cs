@@ -3,6 +3,7 @@ using PetShop.Core.DomainService;
 using PetShop.Core.Entity;
 using System.Linq;
 using System;
+using PetShop.Core.DomainService.Filtering;
 
 namespace PetShop.Core.ApplicationService.Impl
 {
@@ -17,13 +18,11 @@ namespace PetShop.Core.ApplicationService.Impl
 
         public Pet AddPet(Pet pet)
         {
-            if (pet.Name.Equals(null))
-                throw new NullReferenceException("You can't create a pet without a name!");
-            else if (pet.ID == 0 || _petRepo.ReadPetById(pet.ID) == null)
-                throw new NullReferenceException("There's no such pet in the database!");
-            else if (pet.Price == 0)
-                throw new NullReferenceException("You have to set a price!");
-            return _petRepo.CreatePet(pet);
+                if (pet.Name == null || pet.Name == "")
+                    throw new NullReferenceException("You can't create a pet without a name!");
+                else if (pet.Price == 0)
+                    throw new NullReferenceException("You have to set a price!");
+                return _petRepo.CreatePet(pet);
         }
 
         public bool RemovePet(int id)
@@ -40,28 +39,21 @@ namespace PetShop.Core.ApplicationService.Impl
             return _petRepo.ReadPetByType(type);
         }
 
-        public List<Pet> GetPets()
+        public Pet GetPetById(int id)
         {
-            return _petRepo.ReadPets().ToList();
+            if (id < 1)
+                throw new Exception("Id must be higher than 0!");
+            return _petRepo.ReadPetById(id);
         }
 
-        public List<Pet> SortListOfPets(int selector)
+        public List<Pet> GetPets()
         {
-            switch (selector)
-            {
-                case 1:
-                   return GetPets().OrderBy(pet => pet.Name).ToList();
-                case 2:
-                    return GetPets().OrderBy(pet => pet.BirthDate).ToList();
-                case 3:
-                    return GetPets().OrderBy(pet => pet.SoldDate).ToList();
-                case 4:
-                    return GetPets().OrderBy(pet => pet.Color).ToList();
-                case 5:
-                    return GetPets().OrderBy(pet => pet.Price).ToList();
-                default:
-                    return null;
-            }
+            return _petRepo.ReadPets();
+        }
+
+        public IEnumerable<Pet> GetPetsFiltered(Filter filter)
+        {
+            return _petRepo.ReadPetsFiltered(filter);
         }
 
         public List<Pet> TopFiveCheapest()
@@ -71,13 +63,18 @@ namespace PetShop.Core.ApplicationService.Impl
 
         public Pet UpdatePet(Pet pet)
         {
-            if (pet.Name.Equals(null))
+            if (pet.Name == null || pet.Name == "")
                 throw new NullReferenceException("The name is missing!");
             else if (pet.ID == 0)
                 throw new NullReferenceException("The pet must have an id which is bigger than 0!");
             else if (pet.Price == 0)
                 throw new NullReferenceException("The price is missing!");
             return _petRepo.UpdatePet(pet);
+        }
+
+        public List<Pet> GetPetsByPage(int id)
+        {
+            return GetPets().Skip((id - 1) * 10).Take(10).ToList();
         }
     }
 }

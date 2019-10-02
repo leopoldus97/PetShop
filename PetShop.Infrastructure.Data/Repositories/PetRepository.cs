@@ -1,4 +1,5 @@
 ﻿using PetShop.Core.DomainService;
+using PetShop.Core.DomainService.Filtering;
 using PetShop.Core.Entity;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace PetShop.Infrastructure.Data.Repositories
         static List<Pet> PetList = FakeDB.InitData().ToList();
         public Pet CreatePet(Pet pet)
         {
+            pet.ID = PetList.Max(p => p.ID)+1;
             PetList.Add(pet);
             return pet;
         }
@@ -33,7 +35,11 @@ namespace PetShop.Infrastructure.Data.Repositories
 
         public IEnumerable<Pet> ReadPets()
         {
-            return PetList;
+            //return PetList.Select(p => {
+            //    if (p.PreviousOwner == null) return p;
+            //   p.PreviousOwner = FakeDB.InitOwner().FirstOrDefault(o => o.ID == p.PreviousOwner.ID); return p;
+            //});
+            return null;
         }
 
         public Pet UpdatePet(Pet pet)
@@ -52,7 +58,22 @@ namespace PetShop.Infrastructure.Data.Repositories
 
         public Pet ReadPetById(int id)
         {
-            return PetList.First(x => x.ID == id);
+                return PetList.FirstOrDefault(x => x.ID == id);
+        }
+
+        public FilteredList<Pet> ReadPetsFiltered(Filter filter)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        IEnumerable<Pet> IPetRepository.ReadPetsFiltered(Filter filter)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        List<Pet> IPetRepository.ReadPets()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

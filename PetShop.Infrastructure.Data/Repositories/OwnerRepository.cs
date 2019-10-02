@@ -49,7 +49,7 @@ namespace PetShop.Infrastructure.Data.Repositories
 
         public Owner ReadOwnerById(int id)
         {
-            return OwnerList.First(x => x.ID == id);
+            return OwnerList.FirstOrDefault(x => x.ID == id);
         }
     }
 }
