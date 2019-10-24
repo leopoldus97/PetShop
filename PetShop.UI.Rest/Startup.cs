@@ -25,6 +25,9 @@ namespace PetShop.UI.Rest
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+                options.AddPolicy("AnyOrigin", builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod())
+            );
             services.AddDbContext<PetShopContext>(opt => opt.UseSqlite("Data source=petApp.db"));
 
             services.AddScoped<IPetRepository, PetRepository>();
@@ -35,8 +38,10 @@ namespace PetShop.UI.Rest
             services.AddMvc().AddJsonOptions(options =>
             {
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
                 //options.SerializerSettings.MaxDepth = 3;
             });
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,6 +71,7 @@ namespace PetShop.UI.Rest
             }
 
             app.UseHttpsRedirection();
+            app.UseCors("AnyOrigin");
             app.UseMvc();
         }
     }

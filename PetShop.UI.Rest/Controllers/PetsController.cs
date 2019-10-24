@@ -23,7 +23,14 @@ namespace PetShop.UI.Rest.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Pet>> GetSorting([FromQuery] Filter filter)
         {
-            return Ok(_petService.GetPetsFiltered(filter).ToList());
+            List<Pet> filteredList = _petService.GetPetsFiltered(filter).ToList();
+            //List<object> obj = new List<Object>();
+
+           // filteredList.ForEach(pet => obj.Add((pet.ID, pet.Name, pet.PreviousOwner.SelectMany(po => new List<object>() { (po.ID, po.FirstName, po.LastName, po.Address, po.PhoneNumber, po.Email) }), pet.Type, pet.Price, pet.PetColor.SelectMany(col => new List<object>() { col.Color.Colour }))));
+            filteredList.ForEach(pet => pet.PreviousOwner.SelectMany(po => new List<Owner>() { new Owner() { ID = po.ID, FirstName = po.FirstName, LastName = po.LastName, Address = po.Address, PhoneNumber = po.PhoneNumber, Email = po.Email } }));
+            filteredList.ForEach(pet => pet.PetColor.ForEach(pcol => pcol.Color.PetColor.Clear()));
+
+            return Ok(filteredList);
         }
 
         // GET api/pets/DOG
@@ -31,7 +38,10 @@ namespace PetShop.UI.Rest.Controllers
         [Route("Type")]
         public ActionResult<IEnumerable<Pet>> Type([FromQuery]Type type)
         {
-            return _petService.GetPetByType(type);
+            List<Pet> filteredList = _petService.GetPetByType(type);
+            filteredList.ForEach(pet => pet.PreviousOwner.SelectMany(po => new List<Owner>() { new Owner() { ID = po.ID, FirstName = po.FirstName, LastName = po.LastName, Address = po.Address, PhoneNumber = po.PhoneNumber, Email = po.Email } }));
+            filteredList.ForEach(pet => pet.PetColor.ForEach(pcol => pcol.Color.PetColor.Clear()));
+            return Ok(filteredList);
         }
 
         // GET api/pets/1

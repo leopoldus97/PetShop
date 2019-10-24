@@ -6,7 +6,7 @@ namespace PetShop.Core.Entity
 {
     public enum Type
     {
-        DOG, CAT, SNAKE, HAMSTER, PARROT, CREATURE
+        CREATURE, DOG, CAT, SNAKE, HAMSTER, PARROT
     }
 
     public class Pet

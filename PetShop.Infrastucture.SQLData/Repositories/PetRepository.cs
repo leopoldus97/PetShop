@@ -79,9 +79,35 @@ namespace PetShop.Infrastucture.SQLData.Repositories
             return sortedList;
         }
 
+        //private IEnumerable<Pet> FilterBy(IEnumerable<Pet> pets, Filter filter)
+        //{
+        //    IEnumerable<Pet> sortedList = pets;
+        //    if (filter.FType < 1)
+        //    {
+        //        sortedList = sortedList.Where(pet => pet.Type == filter.FType);
+        //    }
+        //    if (filter.DuckCostume != null)
+        //    {
+        //        sortedList = sortedList.Where(duck => duck.DuckCostume.Equals(filter.DuckCostume));
+        //    }
+        //    if (filter.DuckPattern != null)
+        //    {
+        //        sortedList = sortedList.Where(duck => duck.DuckPattern.Equals(filter.DuckPattern));
+        //    }
+        //    if (filter.Size != DuckSize.DEFAULT)
+        //    {
+        //        sortedList = sortedList.Where(duck => duck.DuckSize.Equals(filter.Size));
+        //    }
+        //    if (filter.DuckGender != DuckGender.DEFAULT)
+        //    {
+        //        sortedList = sortedList.Where(duck => duck.DuckGender.Equals(filter.DuckGender));
+        //    }
+        //    return sortedList;
+        //}
+
         private IEnumerable<Pet> OrderBy(IEnumerable<Pet> pets, Ordering order)
         {
-            IEnumerable<Pet> orderedList = null;
+            IEnumerable<Pet> orderedList;
             switch (order)
             {
                 case Ordering.ASC:
@@ -102,15 +128,17 @@ namespace PetShop.Infrastucture.SQLData.Repositories
 
             //Create a Filtered List
 
-            var filteredList = new List<Pet>();
+            List<Pet> filteredList;
 
 
 
             //If there is a Filter then filter the list and set Count
 
-            if (filter != null && filter.ItemsPrPage > 0 && filter.CurrentPage > 0)
+            if (filter != null || filter.CurrentPage > 0)
 
             {
+                if (filter.ItemsPrPage < 1)
+                    filter.ItemsPrPage = 10;
 
                 filteredList = ReadPets()
 
@@ -131,6 +159,7 @@ namespace PetShop.Infrastucture.SQLData.Repositories
 
                 return filteredList;
             }
+
 
             if (filter.SortBy > 0)
             {

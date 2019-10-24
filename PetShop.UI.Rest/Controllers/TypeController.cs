@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using PetShop.Core.Entity;
 
 namespace PetShop.UI.Rest.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class TypeController : ControllerBase
     {
         // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            return new string[] { "value1", "value2" };
+            return Enum.GetNames(typeof(Core.Entity.Type));
         }
 
         // GET api/values/5

@@ -32,14 +32,14 @@ namespace PetShop.Infrastucture.SQLData
                 Price = 1233
             }).Entity;
             
-            Pet p3 = ctx.Pets.Add(new Pet() { ID = 3 }).Entity;
-            Pet p4 = ctx.Pets.Add(new Pet() { ID = 4 }).Entity;
-            Pet p5 = ctx.Pets.Add(new Pet() { ID = 5 }).Entity;
-            Pet p6 = ctx.Pets.Add(new Pet() { ID = 6 }).Entity;
-            Pet p7 = ctx.Pets.Add(new Pet() { ID = 7 }).Entity;
-            Pet p8 = ctx.Pets.Add(new Pet() { ID = 8 }).Entity;
-            Pet p9 = ctx.Pets.Add(new Pet() { ID = 9 }).Entity;
-            Pet p10 = ctx.Pets.Add(new Pet() { ID = 10 }).Entity;
+            Pet p3 = ctx.Pets.Add(new Pet() { ID = 3, Name = "Samson" }).Entity;
+            Pet p4 = ctx.Pets.Add(new Pet() { ID = 4, Name = "Miguel" }).Entity;
+            Pet p5 = ctx.Pets.Add(new Pet() { ID = 5, Name = "Rodrigo" }).Entity;
+            Pet p6 = ctx.Pets.Add(new Pet() { ID = 6, Name = "Emanuel" }).Entity;
+            Pet p7 = ctx.Pets.Add(new Pet() { ID = 7, Name = "Smurf" }).Entity;
+            Pet p8 = ctx.Pets.Add(new Pet() { ID = 8, Name = "Griffon" }).Entity;
+            Pet p9 = ctx.Pets.Add(new Pet() { ID = 9, Name = "Rex" }).Entity;
+            Pet p10 = ctx.Pets.Add(new Pet() { ID = 10, Name = "Lassie" }).Entity;
 
             Pet p11 = ctx.Pets.Add(new Pet()
             {
