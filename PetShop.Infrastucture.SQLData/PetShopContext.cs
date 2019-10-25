@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PetShop.Core.Entity;
+using PetShop.Core.Entity.AuthModels;
 
 namespace PetShop.Infrastucture.SQLData
 {
@@ -9,6 +10,7 @@ namespace PetShop.Infrastucture.SQLData
         public DbSet<Pet> Pets { get; set; }
         public DbSet<Color> Colors { get; set; }
         public DbSet<PetColor> PetColors { get; set; }
+        public DbSet<User> Users { get; set; }
 
         public PetShopContext(DbContextOptions<PetShopContext> opt) : base(opt)
         {
